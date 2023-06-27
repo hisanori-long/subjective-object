@@ -14,7 +14,7 @@ public class Sample_ConnectType : MonoBehaviour
         // ConnectType.Simulator - ビルド対象に関わらずシミュレータのキューブで動作する
         // ConnectType.Real - ビルド対象に関わらずリアル(現実)のキューブで動作する
         cm = new CubeManager(connectType);
-        await cm.MultiConnect(2);
+        await cm.MultiConnect(1);
     }
 
 
