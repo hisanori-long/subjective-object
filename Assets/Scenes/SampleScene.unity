@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 522617344}
   - component: {fileID: 522617348}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -214,7 +214,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 522617343}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0.15, z: 0}
+  m_LocalPosition: {x: -0.8, y: 0.15, z: 0}
   m_LocalScale: {x: 0.4, y: 0.25, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -233,8 +233,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7978a0434570045dc8a75e5ab0463aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: 0, z: 0}
-  moveSpeed: 0.7
+  speed: 1
+  isStopped: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,8 +264,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
-  m_Range: 20.31
+  m_Intensity: 3
+  m_Range: 60
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.802082
   m_CookieSize: 10
@@ -549,6 +549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6200576671f324cce853b54ef95c7cc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shadowObject: {fileID: 522617343}
   connectType: 2
 --- !u!114 &1553510449
 MonoBehaviour:

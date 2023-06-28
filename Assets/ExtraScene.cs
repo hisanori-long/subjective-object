@@ -5,12 +5,14 @@ using toio;
 
 public class ExtraScene : MonoBehaviour
 {
+    public GameObject shadowObject;
     public ConnectType connectType;
 
     CubeManager cm;
-    float intervalTime = 0.5f;
+    float intervalTime = 7f;
     float elapsedTime = 0;
     int phase = 0;
+    ShadowScript shadowScript; // ShadowScriptへの参照
 
     async void Start()
     {
@@ -19,43 +21,61 @@ public class ExtraScene : MonoBehaviour
         // ConnectType.Real - ビルド対象に関わらずリアル(現実)のキューブで動作する
         cm = new CubeManager(connectType);
         await cm.MultiConnect(2);
+
+        // shadowScript = shadowObject.GetComponent<ShadowScript>();
     }
 
 
     void Update()
     {
+        // if (intervalTime < elapsedTime) // 2秒ごとに実行
+        // {
+            // bool shadowStopped = shadowScript.isStopped;
+            // Debug.Log("isStopped");
+            // Debug.Log(shadowStopped);
 
-        foreach(var cube in cm.syncCubes)
+            // if(shadowStopped) {
+            //     Transform shadowPosition = shadowObject.transform;
+            //     Debug.Log("position-x:");
+            //     Debug.Log(shadowPosition.position.x);
+            // }
+        // }
+
+        // bool shadowStopped = shadowScript.isStopped;
+
+        // if(shadowStopped) {
+        //     Transform shadowPosition = shadowObject.transform;
+        //     Debug.Log("position-x:");
+        //     Debug.Log(shadowPosition.position.x);
+        // }
+
+         if (cm.synced)
         {
 
-            elapsedTime += Time.deltaTime;
-
-            if (intervalTime < elapsedTime) // 2秒ごとに実行
+            foreach(var cube in cm.syncCubes)
             {
-                if (phase <= 2)
-                {
-                    cube.Move(30, 30, 2500);
-                }
-                else if (phase == 3)
-                {
-                    cube.Move(0, 0, 1500);
-                }
-                else if (phase <= 6)
-                {
-                    cube.Move(-30, -30, 2500);
-                }
-                else if (phase == 7)
-                {
-                    cube.Move(0, 0, 1500);
-                }
-                else if (phase == 8)
-                {
-                    phase = -1;
-                }
 
-                elapsedTime = 0.0f;
-                phase += 1;
+                elapsedTime += Time.deltaTime;
+
+                if (intervalTime < elapsedTime) // 2秒ごとに実行
+                {
+                    if (phase == 0)
+                    {
+                        cube.Move(30, 30, 1760);
+                    }
+                    else if (phase == 1)
+                    {
+                        cube.Move(-30, -30, 1760);
+                        phase = -1;
+                    }
+
+                    elapsedTime = 0.0f;
+                    phase += 1;
+                }
             }
+
+
+            
         }
     }
 }
