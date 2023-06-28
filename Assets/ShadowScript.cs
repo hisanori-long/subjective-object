@@ -2,49 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShadowScript : MonoBehaviour{
+public class ShadowScript : MonoBehaviour
+{
+    public float speed = 1f; // 移動速度
+    private float direction = 1f; // 移動方向（1: 正方向, -1: 逆方向）
+    private Vector3 startPosition; // 初期位置
+    private bool isStopped = false; // 停止フラグ
+    private float stopTimer = 0f; // 停止タイマー
 
-    [SerializeField] private Vector3 velocity;              // 移動方向
-    [SerializeField] private float moveSpeed = 5.0f;        // 移動速度
+    void Start()
+    {
+        startPosition = transform.position; // 初期位置を保持
+    }
 
-    int phase = 0;
-    float intervalTime = 0.5f;
-    float elapsedTime = 0;
-    
-
-    void Update () {
-
-        elapsedTime += Time.deltaTime;
-
-        if (intervalTime < elapsedTime) // 2秒ごとに実行
+    void Update()
+    {
+        if (!isStopped)
         {
+            float newPosition = transform.position.x + direction * speed * Time.deltaTime; // 新しい位置を計算
 
-            if (phase <= 2)
+            if (newPosition >= 1f || newPosition <= -1f)
             {
-                velocity.x -= 1;
-            }
-            else if (phase <= 5)
-            {
-                velocity.x += 1;
-            }
-            else if (phase == 8)
-            {
-                phase = -1;
+                direction *= -1f; // 移動方向を逆転させる
+                isStopped = true; // 停止フラグを立てる
+                stopTimer = 0f; // 停止タイマーをリセット
             }
 
-            elapsedTime = 0.0f;
-            phase += 1;
+            transform.position = new Vector3(newPosition, startPosition.y, startPosition.z); // キューブを移動させる
         }
-
-        // 速度ベクトルの長さを1秒でmoveSpeedだけ進むように調整します
-        velocity = velocity.normalized * moveSpeed * Time.deltaTime;
-
-        // いずれかの方向に移動している場合
-        if(velocity.magnitude > 0)
+        else
         {
-            // プレイヤーの位置(transform.position)の更新
-            // 移動方向ベクトル(velocity)を足し込みます
-            transform.position += velocity;
+            stopTimer += Time.deltaTime; // 停止時間を計測
+
+            if (stopTimer >= 5f)
+            {
+                isStopped = false; // 停止フラグを解除
+            }
         }
     }
 }
