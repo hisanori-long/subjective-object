@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ShadowScript : MonoBehaviour
 {
-    public float moveSpeed = 5f; // 移動速度
-    public float moveDistance = 5f; // 移動距離
-    public float stopTime = 2f; // 停止時間（変更前は12fでした）
+    public float moveSpeed = 4.3f; // 移動速度
+    public float moveDistance = 4.3f; // 移動距離
+    public float stopTime = 4f; // 停止時間（変更前は12fでした）
 
     private bool isMoving = false;
     private float currentMoveTime = 0f;

@@ -9,7 +9,7 @@ public class ExtraScene : MonoBehaviour
     public ConnectType connectType;
 
     CubeManager cm;
-    float intervalTime = 2f;
+    float intervalTime = 4f;
     float elapsedTime = 0;
     int phase = 0;
     ShadowScript shadowScript; // ShadowScriptへの参照
