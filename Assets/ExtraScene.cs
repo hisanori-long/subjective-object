@@ -9,7 +9,7 @@ public class ExtraScene : MonoBehaviour
     public ConnectType connectType;
 
     CubeManager cm;
-    float intervalTime = 4f;
+    float intervalTime = 2f;
     float elapsedTime = 0;
     int phase = 0;
     ShadowScript shadowScript; // ShadowScriptへの参照
@@ -39,7 +39,7 @@ public class ExtraScene : MonoBehaviour
                 {
                     if (phase == 0)
                     {
-                        cube.Move(20, 20, 2000);
+                        cube.Move(10, 10, 2000);
                     }
                     else if (phase == 1)
                     {
@@ -47,7 +47,7 @@ public class ExtraScene : MonoBehaviour
                     }
                     else if (phase == 2)
                     {
-                        cube.Move(-20, -20, 2000);
+                        cube.Move(-10, -10, 2000);
                     }
                     else if (phase == 3)
                     {
