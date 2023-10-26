@@ -1,69 +1,83 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ShadowScript : MonoBehaviour
 {
-    public float moveSpeed = 4.3f; // 移動速度
-    public float moveDistance = 4.3f; // 移動距離
-    public float stopTime = 4f; // 停止時間（変更前は12fでした）
+    public float moveSpeed = 5f; // オブジェクトの移動速度
 
-    private bool isMoving = false;
-    private float currentMoveTime = 0f;
-    private float moveTime = 2f; // オブジェクトが動く時間（追加）
-    private int moveDirection = 1; // 1: 正の方向、-1: 負の方向
-    private Rigidbody rb; // Rigidbodyコンポーネントを格納する変数
+    private string moveStatus = "stop"; // オブジェクトの移動状態を示す変数
+    private float startTime; // ゲーム開始時の時間
 
-    private void Start()
+    void Start()
     {
-        rb = GetComponent<Rigidbody>(); // Rigidbodyコンポーネントを取得
-        if (rb == null)
-        {
-            Debug.LogError("Rigidbodyコンポーネントが見つかりません。このスクリプトをアタッチしたオブジェクトにRigidbodyを追加してください。");
-        }
+        startTime = Time.time; // ゲーム開始時の時間を記録
     }
 
-    private void Update()
+    void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            isMoving = true; // スペースを押すと動き始める
-            currentMoveTime = 0f; // 現在の移動時間をリセット
-            moveDirection = 1; // 初回は正の方向に移動
-        }
-    }
+        // ゲーム開始からの経過時間を取得
+        float elapsedTime = Time.time - startTime;
 
-    private void FixedUpdate()
-    {
-        if (isMoving)
+        // オブジェクトを左右に移動させる
+        if (moveStatus == "moveForward")
         {
-            MoveObject();
+            // オブジェクトを前進させる
+            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
         }
-    }
-
-    private void MoveObject()
-    {
-        if (currentMoveTime < moveTime) // オブジェクトが動く時間まで移動
+        else if (moveStatus == "turnRight")
         {
-            // 移動中の場合
-            float movement = moveSpeed * Time.fixedDeltaTime * moveDirection;
-            rb.MovePosition(transform.position + new Vector3(movement, 0f, 0f));
-            currentMoveTime += Time.fixedDeltaTime;
+            // オブジェクトを右に移動
+            transform.Rotate(Vector3.up, 60f * Time.deltaTime);
+        }
+        else if (moveStatus == "turnLeft")
+        {
+            // オブジェクトを左に移動
+            transform.Rotate(Vector3.up, -60f * Time.deltaTime);
+        }
+
+
+        if (elapsedTime >= 5f && elapsedTime < 31.5f) // 左右を見渡す
+        {
+            moveStatus = "moveForward";
+        }
+        else if (elapsedTime >= 34f && elapsedTime < 37f)
+        {
+            moveStatus = "turnLeft";
+        }
+        else if (elapsedTime >= 40f && elapsedTime < 41.5f)
+        {
+            moveStatus = "turnRight";
+        }
+        else if (elapsedTime >= 44f && elapsedTime < 53.5f) // 前進する
+        {
+            moveStatus = "moveForward";
+        }
+        else if (elapsedTime >= 55f && elapsedTime < 56.5f) // 右に方向転換
+        {
+            moveStatus = "turnRight";
+        }
+        else if (elapsedTime >= 57f && elapsedTime < 60f) // 右に方向転換
+        {
+            moveStatus = "turnLeft";
+        }
+        else if (elapsedTime >= 61f && elapsedTime < 70.5f) // 前進する
+        {
+            moveStatus = "moveForward";
+        }
+        else if (elapsedTime >= 71f && elapsedTime < 72.5f) // 右に方向転換
+        {
+            moveStatus = "turnLeft";
+        }
+        else if (elapsedTime >= 73f && elapsedTime < 82.5f) // 前進する
+        {
+            moveStatus = "moveForward";
+        }
+        else if (elapsedTime >= 84f && elapsedTime < 85.5f) // 前進する
+        {
+            moveStatus = "turnLeft";
         }
         else
         {
-            // 停止中の場合
-            isMoving = false;
-            rb.velocity = Vector3.zero;
-            Invoke("ChangeDirection", stopTime); // 一定時間後に方向を変える
+            moveStatus = "stop";
         }
-    }
-
-    private void ChangeDirection()
-    {
-        // 方向を反転させて再度移動を開始する
-        moveDirection *= -1;
-        isMoving = true;
-        currentMoveTime = 0f;
     }
 }

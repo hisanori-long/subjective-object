@@ -5,14 +5,13 @@ using toio;
 
 public class ExtraScene : MonoBehaviour
 {
-    public GameObject shadowObject;
-    public ConnectType connectType;
+    public int moveSpeed = 1500; // キューブの移動速度（スピード）
 
+    private string moveStatus = "stop"; // キューブの移動状態を示す変数
+    private float startTime; // ゲーム開始時の時間
+
+    public ConnectType connectType;
     CubeManager cm;
-    float intervalTime = 4f;
-    float elapsedTime = 0;
-    int phase = 0;
-    ShadowScript shadowScript; // ShadowScriptへの参照
 
     async void Start()
     {
@@ -21,47 +20,81 @@ public class ExtraScene : MonoBehaviour
         // ConnectType.Real - ビルド対象に関わらずリアル(現実)のキューブで動作する
         cm = new CubeManager(connectType);
         await cm.MultiConnect(2);
-
+        startTime = Time.time; // ゲーム開始時の時間を記録
     }
-
 
     void Update()
     {
-         if (cm.synced)
+        if (cm.synced)
         {
-
-            foreach(var cube in cm.syncCubes)
+            foreach (var cube in cm.syncCubes)
             {
+                // ゲーム開始からの経過時間を取得
+                float elapsedTime = Time.time - startTime;
 
-                elapsedTime += Time.deltaTime;
-
-                if (intervalTime < elapsedTime) // 2秒ごとに実行
+                // オブジェクトを左右に移動させる
+                if (moveStatus == "moveForward")
                 {
-                    if (phase == 0)
-                    {
-                        cube.Move(10, 10, 2000);
-                    }
-                    else if (phase == 1)
-                    {
-                        // cube.Move(0, 0, 2000);
-                    }
-                    else if (phase == 2)
-                    {
-                        cube.Move(-10, -10, 2000);
-                    }
-                    else if (phase == 3)
-                    {
-                        // cube.Move(0, 0, 2000);
-                        phase = -1;
-                    }
+                    // オブジェクトを前進させる
+                    cube.Move(8, 8, (short)moveSpeed); // moveSpeedをintからshortにキャスト
+                }
+                else if (moveStatus == "turnRight")
+                {
+                    // オブジェクトを右に移動
+                    cube.Move(10, -10, (short)moveSpeed); // moveSpeedをintからshortにキャスト
+                }
+                else if (moveStatus == "turnLeft")
+                {
+                    // オブジェクトを左に移動
+                    cube.Move(-10, 10, (short)moveSpeed); // moveSpeedをintからshortにキャスト
+                }
 
-                    elapsedTime = 0.0f;
-                    phase += 1;
+                // 移動制御のタイミングと方向を設定
+                if (elapsedTime >= 0f && elapsedTime < 31.5f) // 左右を見渡す
+                {
+                    moveStatus = "moveForward";
+                }
+                else if (elapsedTime >= 34f && elapsedTime < 37f)
+                {
+                    moveStatus = "moveForward";
+                }
+                else if (elapsedTime >= 40f && elapsedTime < 41.5f)
+                {
+                    moveStatus = "turnRight";
+                }
+                else if (elapsedTime >= 44f && elapsedTime < 53.5f) // 前進する
+                {
+                    moveStatus = "moveForward";
+                }
+                else if (elapsedTime >= 55f && elapsedTime < 56.5f) // 右に方向転換
+                {
+                    moveStatus = "turnRight";
+                }
+                else if (elapsedTime >= 57f && elapsedTime < 60f) // 右に方向転換
+                {
+                    moveStatus = "turnLeft";
+                }
+                else if (elapsedTime >= 61f && elapsedTime < 70.5f) // 前進する
+                {
+                    moveStatus = "moveForward";
+                }
+                else if (elapsedTime >= 71f && elapsedTime < 72.5f) // 右に方向転換
+                {
+                    moveStatus = "turnLeft";
+                }
+                else if (elapsedTime >= 73f && elapsedTime < 82.5f) // 前進する
+                {
+                    moveStatus = "moveForward";
+                }
+                else if (elapsedTime >= 84f && elapsedTime < 85.5f) // 前進する
+                {
+                    moveStatus = "turnLeft";
+                }
+                else
+                {
+                    moveStatus = "stop";
                 }
             }
-
-
-            
         }
     }
 }
