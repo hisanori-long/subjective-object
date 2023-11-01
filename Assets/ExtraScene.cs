@@ -5,9 +5,13 @@ using toio;
 
 public class ExtraScene : MonoBehaviour
 {
+    public GameObject shadow;
+
+    private ShadowScript shadowscript;
+
     public int moveSpeed = 1500; // キューブの移動速度（スピード）
 
-    private string moveStatus = "stop"; // キューブの移動状態を示す変数
+    public float moveSpeedShadow = 5f;
     private float startTime; // ゲーム開始時の時間
 
     public ConnectType connectType;
@@ -15,86 +19,211 @@ public class ExtraScene : MonoBehaviour
 
     async void Start()
     {
-        // ConnectType.Auto - ビルド対象に応じて内部実装が自動的に変わる
-        // ConnectType.Simulator - ビルド対象に関わらずシミュレータのキューブで動作する
-        // ConnectType.Real - ビルド対象に関わらずリアル(現実)のキューブで動作する
-        cm = new CubeManager(connectType);
-        await cm.MultiConnect(2);
-        startTime = Time.time; // ゲーム開始時の時間を記録
-    }
+        shadowscript = shadow.GetComponent<ShadowScript>();
 
+        cm = new CubeManager(connectType);
+        await cm.MultiConnect(1);
+        startTime = Time.time; // ゲーム開始時の時間を記録
+
+    }
     void Update()
     {
+        float currentTime = Time.time;
         if (cm.synced)
         {
             foreach (var cube in cm.syncCubes)
             {
-                // ゲーム開始からの経過時間を取得
-                float elapsedTime = Time.time - startTime;
+                float elapsedTime = currentTime - startTime + 48f;
 
-                // オブジェクトを左右に移動させる
-                if (moveStatus == "moveForward")
+                // Phase1 左右を見渡す
+                if (elapsedTime >= 20f && elapsedTime < 20.5f)
                 {
-                    // オブジェクトを前進させる
-                    cube.Move(8, 8, (short)moveSpeed); // moveSpeedをintからshortにキャスト
+                    turnRight(cube);
+                    moveShadowRight();
                 }
-                else if (moveStatus == "turnRight")
+                else if (elapsedTime >= 21.5f && elapsedTime < 22f)
                 {
-                    // オブジェクトを右に移動
-                    cube.Move(10, -10, (short)moveSpeed); // moveSpeedをintからshortにキャスト
+                    turnLeft(cube);
+                    moveShadowLeft();
                 }
-                else if (moveStatus == "turnLeft")
+                else if (elapsedTime >= 23f && elapsedTime < 23.5f)
                 {
-                    // オブジェクトを左に移動
-                    cube.Move(-10, 10, (short)moveSpeed); // moveSpeedをintからshortにキャスト
+                    turnLeft(cube);
+                    moveShadowLeft();
+                }
+                else if (elapsedTime >= 24.5f && elapsedTime < 25f)
+                {
+                    turnRight(cube);
+                    moveShadowRight();
+                }
+                else if (elapsedTime >= 26f && elapsedTime < 35.2f)
+                {
+                    moveForward(cube);
+                    moveShadowForward(0.0306f);
                 }
 
-                // 移動制御のタイミングと方向を設定
-                if (elapsedTime >= 0f && elapsedTime < 31.5f) // 左右を見渡す
+                //phase2 右を向き看板を確認
+                else if (elapsedTime >= 36f && elapsedTime < 36.5f)
                 {
-                    moveStatus = "moveForward";
+                    turnRight(cube);
+                    moveShadowRight();
                 }
-                else if (elapsedTime >= 34f && elapsedTime < 37f)
+
+                //phase3 前を向き次の看板まで移動
+                else if (elapsedTime >= 40.5f && elapsedTime < 41f)
                 {
-                    moveStatus = "moveForward";
+                    turnLeft(cube);
+                    moveShadowLeft();
                 }
-                else if (elapsedTime >= 40f && elapsedTime < 41.5f)
+
+                else if (elapsedTime >= 42f && elapsedTime < 46.5f)
                 {
-                    moveStatus = "turnRight";
+                    moveForward(cube);
+                    moveShadowForward(0.0306f);
                 }
-                else if (elapsedTime >= 44f && elapsedTime < 53.5f) // 前進する
+
+                //phase4 左を向き看板を確認
+                else if (elapsedTime >= 47.5f && elapsedTime < 48f)
                 {
-                    moveStatus = "moveForward";
+                    turnLeft(cube);
+                    moveShadowLeft();
                 }
-                else if (elapsedTime >= 55f && elapsedTime < 56.5f) // 右に方向転換
+
+                //phase5 左右を見渡す
+                else if (elapsedTime >= 50f && elapsedTime < 50.5f)
                 {
-                    moveStatus = "turnRight";
+                    turnRight(cube);
+                    moveShadowRight();
                 }
-                else if (elapsedTime >= 57f && elapsedTime < 60f) // 右に方向転換
+                else if (elapsedTime >= 51f && elapsedTime < 52f)
                 {
-                    moveStatus = "turnLeft";
+                    turnLeft(cube);
+                    moveShadowLeft();
                 }
-                else if (elapsedTime >= 61f && elapsedTime < 70.5f) // 前進する
+                else if (elapsedTime >= 52.5f && elapsedTime < 53f)
                 {
-                    moveStatus = "moveForward";
+                    turnRight(cube);
+                    moveShadowRight();
                 }
-                else if (elapsedTime >= 71f && elapsedTime < 72.5f) // 右に方向転換
+                //phase7 影のみ左右を見渡す
+                else if (elapsedTime >= 54f && elapsedTime < 54.5f)
                 {
-                    moveStatus = "turnLeft";
+                    toioStop(cube);
+                    moveShadowRight();
                 }
-                else if (elapsedTime >= 73f && elapsedTime < 82.5f) // 前進する
+                else if (elapsedTime >= 55f && elapsedTime < 56f)
                 {
-                    moveStatus = "moveForward";
+                    toioStop(cube);
+                    moveShadowLeft();
                 }
-                else if (elapsedTime >= 84f && elapsedTime < 85.5f) // 前進する
+                else if (elapsedTime >= 56.5f && elapsedTime < 57f)
                 {
-                    moveStatus = "turnLeft";
+                    toioStop(cube);
+                    moveShadowRight();
                 }
-                else
+                //phase7 影だけが動き出す
+                else if (elapsedTime >= 59f && elapsedTime < 60f)
                 {
-                    moveStatus = "stop";
+                    toioStop(cube);
+                    moveShadowRight();
                 }
+                else if (elapsedTime >= 60f && elapsedTime < 62.5f)
+                {
+                    toioStop(cube);
+                    moveShadowForward(0.0306f);
+                }
+                // phase8 toioと影が別々の方向に動き出す
+                else if (elapsedTime >= 62.5f && elapsedTime < 63f)
+                {
+                    turnLeft(cube);
+                    moveShadowForward(0.0306f);
+                }
+                else if (elapsedTime >= 63f && elapsedTime < 63.5f)
+                {
+                    moveForward(cube);
+                }
+
+                // phase9 影だけが右に曲がり前に動く
+                else if (elapsedTime >= 64f && elapsedTime < 65f)
+                {
+                    toioStop(cube);
+                    moveShadowRight();
+                }
+
+                else if (elapsedTime >= 65f && elapsedTime < 66f)
+                {
+                    toioStop(cube);
+                    moveShadowForward(0.0306f);
+                }
+
+                // else if (elapsedTime >= 50f && elapsedTime < 50.5f)
+                // {
+                //     turnLeft(cube);
+                //     moveShadowRight();
+                // }
+
+                // else if (elapsedTime >= 50.5f && elapsedTime < 51f)
+                // {
+                //     //moveForward(cube);
+                //     moveShadowRight();
+                // }
+
+                // else if (elapsedTime >= 51f && elapsedTime < 51.5f)
+                // {
+                //     moveForward(cube);
+                // }
+
+                // else if (elapsedTime >= 51.5f && elapsedTime < 52f)
+                // {
+
+                //     moveForward(cube);
+                //     moveShadowForward(0.0306f);
+                // }
+
+                // else if (elapsedTime >= 52f && elapsedTime < 53f)
+                // {
+                //     moveShadowForward(0.0306f);
+                // }
+
+
             }
         }
+    }
+
+    void moveForward(Cube cube)
+    {
+        cube.Move(12, 12, 100);
+    }
+    void turnRight(Cube cube)
+    {
+        cube.Move(8, -8, 100);
+    }
+
+    void turnLeft(Cube cube)
+    {
+        cube.Move(-8, 8, 100);
+    }
+
+    void toioStop(Cube cube)
+    {
+        cube.Move(0, 0, 0);
+    }
+
+    void moveShadowForward(float speed)
+    {
+        // shadowオブジェクトのTransformコンポーネントを取得し、前進させる
+        shadow.transform.Translate(0f, 0f, -speed, Space.Self);
+    }
+
+    void moveShadowRight()
+    {
+        // shadowオブジェクトのTransformコンポーネントを取得し、右回転させる
+        shadow.transform.Rotate(new Vector3(0, -4.4f, 0));
+    }
+
+    void moveShadowLeft()
+    {
+        // shadowオブジェクトのTransformコンポーネントを取得し、左回転させる
+        shadow.transform.Rotate(new Vector3(0, 4.4f, 0));
     }
 }
