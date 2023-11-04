@@ -33,7 +33,7 @@ public class ExtraScene : MonoBehaviour
         {
             foreach (var cube in cm.syncCubes)
             {
-                float elapsedTime = currentTime - startTime + 48f;
+                float elapsedTime = currentTime - startTime + 17f;
 
                 // Phase1 左右を見渡す
                 if (elapsedTime >= 20f && elapsedTime < 20.5f)
@@ -138,7 +138,7 @@ public class ExtraScene : MonoBehaviour
                     turnLeft(cube);
                     moveShadowForward(0.0306f);
                 }
-                else if (elapsedTime >= 63f && elapsedTime < 63.5f)
+                else if (elapsedTime >= 63f && elapsedTime < 64f)
                 {
                     moveForward(cube);
                 }
@@ -156,36 +156,43 @@ public class ExtraScene : MonoBehaviour
                     moveShadowForward(0.0306f);
                 }
 
-                // else if (elapsedTime >= 50f && elapsedTime < 50.5f)
-                // {
-                //     turnLeft(cube);
-                //     moveShadowRight();
-                // }
+                // phase10 影に追いつこうとする
+                else if (elapsedTime >= 67f && elapsedTime < 68f)
+                {
+                    turnRight(cube);
+                    moveShadowForward(0.0306f);
+                }
+                else if (elapsedTime >= 68.5f && elapsedTime < 69.5f)
+                {
+                    turnLeft(cube);
+                    moveShadowForward(0.0306f);
+                }
+                else if (elapsedTime >= 70f && elapsedTime < 71.6f)
+                {
+                    turnRight(cube);
+                }
+                else if (elapsedTime >= 72f && elapsedTime < 75f)
+                {
+                    moveForward(cube);
+                }
 
-                // else if (elapsedTime >= 50.5f && elapsedTime < 51f)
-                // {
-                //     //moveForward(cube);
-                //     moveShadowRight();
-                // }
-
-                // else if (elapsedTime >= 51f && elapsedTime < 51.5f)
-                // {
-                //     moveForward(cube);
-                // }
-
-                // else if (elapsedTime >= 51.5f && elapsedTime < 52f)
-                // {
-
-                //     moveForward(cube);
-                //     moveShadowForward(0.0306f);
-                // }
-
-                // else if (elapsedTime >= 52f && elapsedTime < 53f)
-                // {
-                //     moveShadowForward(0.0306f);
-                // }
-
-
+                // phase 11 影に追いつこうとする
+                else if (elapsedTime >= 80f && elapsedTime < 80.5f)
+                {
+                    turnRight(cube);
+                }
+                else if (elapsedTime >= 81f && elapsedTime < 82f)
+                {
+                    turnLeft(cube);
+                }
+                else if (elapsedTime >= 82.5f && elapsedTime < 83.75f)
+                {
+                    turnRight(cube);
+                }
+                else if (elapsedTime >= 83.5f && elapsedTime < 86f)
+                {
+                    moveForward(cube);
+                }
             }
         }
     }
