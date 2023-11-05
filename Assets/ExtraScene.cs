@@ -33,7 +33,7 @@ public class ExtraScene : MonoBehaviour
         {
             foreach (var cube in cm.syncCubes)
             {
-                float elapsedTime = currentTime - startTime + 17f;
+                float elapsedTime = currentTime - startTime + 86f;
 
                 // Phase1 左右を見渡す
                 if (elapsedTime >= 20f && elapsedTime < 20.5f)
@@ -193,6 +193,64 @@ public class ExtraScene : MonoBehaviour
                 {
                     moveForward(cube);
                 }
+
+                // phase 12 影が自由に動き、toioがそれについていく
+                else if (elapsedTime >= 88f && elapsedTime < 89.3f)
+                {
+                    toioStop(cube);
+                    moveShadowForward(0.05f);
+                }
+                else if (elapsedTime >= 89.5f && elapsedTime < 90f)
+                {
+                    toioStop(cube);
+                    moveShadowRight();
+                }
+                else if (elapsedTime >= 90f && elapsedTime < 92.5f)
+                {
+                    toioStop(cube);
+                    moveShadowForward(0.05f);
+                }
+                else if (elapsedTime >= 92.5f && elapsedTime < 93.3f)
+                {
+                    toioStop(cube);
+                    moveShadowRight();
+                }
+                else if (elapsedTime >= 94f && elapsedTime < 99f)
+                {
+                    toioStop(cube);
+                    moveShadowForward(0.05f);
+                }
+                else if (elapsedTime >= 101f && elapsedTime < 101.7f)
+                {
+                    toioStop(cube);
+                    moveShadowLeft();
+                }
+                else if (elapsedTime >= 102f && elapsedTime < 103f)
+                {
+                    toioStop(cube);
+                    moveShadowForward(0.05f);
+                }
+                else if (elapsedTime >= 103f && elapsedTime < 103.5f)
+                {
+                    toioStop(cube);
+                    moveShadowLeft();
+                }
+                else if (elapsedTime >= 103.5f && elapsedTime < 107.5f)
+                {
+                    toioStop(cube);
+                    moveShadowForward(0.05f);
+                }
+                else if (elapsedTime >= 107.5f && elapsedTime < 108f)
+                {
+                    toioStop(cube);
+                    moveShadowLeft();
+                }
+                else if (elapsedTime >= 108f && elapsedTime < 110f)
+                {
+                    toioStop(cube);
+                    moveShadowForward(0.05f);
+                }
+
             }
         }
     }
