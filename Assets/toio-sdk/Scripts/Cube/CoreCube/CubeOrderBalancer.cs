@@ -271,7 +271,7 @@ namespace toio
                             sb.Append(o.ToString()).Append(", ");
                         }
                         sb = sb.Remove(sb.Length - 2, 2);
-                        Debug.Log("[CubeOrderBalancer]弱い命令が2つ以上溜まっています. " + sb.ToString());
+                        // Debug.Log("[CubeOrderBalancer]弱い命令が2つ以上溜まっています. " + sb.ToString());
                     }
 #endif
                     // moveの都合上後ろの命令を実行

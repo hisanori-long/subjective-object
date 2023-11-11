@@ -70,6 +70,10 @@ public class ExtraScene : MonoBehaviour
         {
             phase5();
         }
+        else if (phase == 6)
+        {
+            phase6();
+        }
 
     }
 
@@ -220,14 +224,14 @@ public class ExtraScene : MonoBehaviour
             toioLeft();
             shadowRight();
         }
-        else if (elapsedTime >= 1.5f && elapsedTime < 1.7f)
+        else if (elapsedTime >= 1.5f && elapsedTime < 1.9f)
         {
             toioStop();
             shadowRight();
         }
-        else if (elapsedTime >= 1.7f && elapsedTime < 2f)
+        else if (elapsedTime >= 1.9f && elapsedTime < 2f)
         {
-            // shadowFixDirection(-150);
+            shadowFixDirection(-150);
         }
         else if (elapsedTime >= 2f && elapsedTime < 3f)
         {
@@ -237,22 +241,61 @@ public class ExtraScene : MonoBehaviour
         {
             toioLeft();
         }
+        else if (elapsedTime >= 4f && elapsedTime < 5.2f)
+        {
+            toioForward(-60);
+        }
+        else if (elapsedTime >= 6f && elapsedTime < 6.5f)
+        {
+            toioRight();
+        }
+        else if (elapsedTime >= 7f && elapsedTime < 8f)
+        {
+            toioLeft();
+        }
+        else if (elapsedTime >= 8.5f && elapsedTime < 10.2f)
+        {
+            toioRight();
+        }
+        else if (elapsedTime >= 14f)
+        {
+            toioFixDirection(80);
+        }
     }
+    void phase6()
+    {
+        if (elapsedTime >= 1f && elapsedTime < 4f)
+        {
+            toioForward(80);
+        }
+    }
+
     void toioForward(float direction)
     {
-        float difEulersZValue = eulersZValue - storedEulersZValue;
+        float difEulersZValue = eulersZValue - storedEulersZValue - direction;  // 現在のキューブの姿勢角度
+        // difEulersZValueが正の場合
 
-        if (difEulersZValue > direction)
+        if (difEulersZValue > 0 && difEulersZValue <= 180)
         {
             // 左回転
             cube.Move(12, 13, 100);
         }
-        else if (difEulersZValue < direction)
+        else if (difEulersZValue < -180)
+        {
+            // 左回転
+            cube.Move(12, 13, 100);
+        }
+        else if (difEulersZValue < 0 && difEulersZValue >= -180)
         {
             // 右回転
             cube.Move(13, 12, 100);
         }
-        else if (difEulersZValue == direction)
+        else if (difEulersZValue > 180)
+        {
+            // 右回転
+            cube.Move(13, 12, 100);
+        }
+        else if (difEulersZValue == 0)
         {
             // 前進
             cube.Move(12, 12, 100);
@@ -294,29 +337,45 @@ public class ExtraScene : MonoBehaviour
 
     void toioFixDirection(float direction)
     {
-        float difEulersZValue = eulersZValue - storedEulersZValue; // 現在のキューブの姿勢角度
+        float difEulersZValue = eulersZValue - storedEulersZValue - direction;  // 現在のキューブの姿勢角
+        float absdifEulersZValue = Mathf.Floor(Mathf.Abs(difEulersZValue) / 180);
+        Debug.Log($"difEulersZValue: {difEulersZValue}, absdifEulersZValue: {absdifEulersZValue}");
 
-        // difEulersZValueをログで出力
-        Debug.Log($"difEulersZValue: {difEulersZValue}");
-
-        if (difEulersZValue >= direction - 0 && difEulersZValue <= direction + 0)
+        if (difEulersZValue % 360 == 0)
         {
-
             // 次のphaseへ
             phase = phase + 1;
             resetTime();
         }
-        // directionの方向が-180と180の間だった場合の処理を追加（後日）
-
-        if (difEulersZValue > direction)
+        else if (difEulersZValue > 0)
         {
-            // 左回転
-            cube.Move(-8, 0, 20);
+            // 奇数の場合
+            if (absdifEulersZValue % 2 == 1)
+            {
+                // 右回転
+                cube.Move(0, -8, 23);
+            }
+            // 偶数の場合
+            else
+            {
+                // 左回転
+                cube.Move(-8, 0, 23);
+            }
         }
-        else if (difEulersZValue < direction)
+        else if (difEulersZValue < 0)
         {
-            // 右回転
-            cube.Move(0, -8, 20);
+            // 奇数の場合
+            if (absdifEulersZValue % 2 == 1)
+            {
+                // 左回転
+                cube.Move(-8, 0, 23);
+            }
+            // 偶数の場合
+            else
+            {
+                // 右回転
+                cube.Move(0, -8, 23);
+            }
         }
     }
 
