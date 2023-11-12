@@ -6,16 +6,21 @@ using toio;
 public class ExtraScene : MonoBehaviour
 {
     public GameObject shadow;
-
     private ShadowScript shadowscript;
+    private Vector3 initialPosition; // 影の初期位置
+    private Quaternion initialRotation; // 影の初期角度
     private float startTime; // ゲーム開始時の時間
+    private float startTimeShadow; // 影のゲーム開始時の時間
     private float phase = 0; // ゲームの進行度
+    private float phaseShadow = 0; // 影の進行度
+    public Light myLight; // 照明
     public ConnectType connectType;
     CubeManager cm;
     Cube cube;
     float eulersZValue; // キューブの姿勢角度(正が右回転、負が左回転)
     float storedEulersZValue = 1000; // 保存されたキューブの姿勢角度
     float elapsedTime; // 各フェーズの経過時間
+    float elapsedTimeShadow; // 影の経過時間    
     public float rotationSpeed = 180f;
     public float moveSpeed = 0.0004f;
     async void Start()
@@ -27,11 +32,17 @@ public class ExtraScene : MonoBehaviour
         cm = new CubeManager(connectType);
         cube = await cm.SingleConnect();
 
+        myLight.intensity = 0f; // 照明を消す
+
 
         // キューブの接続が完了したら、キューブのイベントを登録
         cube.attitudeCallback.AddListener("EventScene", OnAttitude);
         await cube.ConfigAttitudeSensor(Cube.AttitudeFormat.Eulers, 100, Cube.AttitudeNotificationType.OnChanged);
         await cube.ConfigMagneticSensor(Cube.MagneticMode.MagnetState);
+
+        // 影の位置を記録
+        initialPosition = shadow.transform.position;
+        initialRotation = shadow.transform.rotation;
 
         resetTime(); // ゲーム開始時の時間を記録
 
@@ -95,19 +106,27 @@ public class ExtraScene : MonoBehaviour
             phase11();
         }
 
+        if (phaseShadow == 2)
+        {
+            phaseShadow();
+        }
+
     }
 
     void phase0()
     {
 
-
-        if (elapsedTime >= 5f)
+        if (elapsedTime >= 2f && elapsedTime < 9f)
+        {
+            // ライトをゆっくりとつける
+            myLight.intensity = elapsedTime / 6f;
+        }
+        else if (elapsedTime >= 10f)
         {
             // 次のphaseへ
             resetTime();
             phase = 1;
             storedEulersZValue = eulersZValue;
-            // storedEulersZValue = 42;
             Debug.Log($"storedEulersZValue is saved: {storedEulersZValue}");
         }
     }
@@ -364,10 +383,10 @@ public class ExtraScene : MonoBehaviour
         }
         else if (elapsedTime >= 3.9f)
         {
+            phaseShadow = 1;
             toioFixDirection(-90);
         }
     }
-
     void phase9()
     {
         if (elapsedTime >= 1f && elapsedTime < 6.5f)
@@ -402,40 +421,83 @@ public class ExtraScene : MonoBehaviour
     }
     void phase10()
     {
-        if (elapsedTime >= 0f && elapsedTime < 6f)
+        if (elapsedTime >= 0f && elapsedTime < 8f)
         {
             shadowForward();
             toioForward(-180);
         }
-        else if (elapsedTime >= 7.5f && elapsedTime < 8.1f)
+        else if (elapsedTime >= 8.5f && elapsedTime < 8.7f)
+        {
+            shadowForward();
+            toioBack();
+        }
+        else if (elapsedTime >= 8.5f && elapsedTime < 9.4f)
         {
             shadowForward();
             toioRight();
         }
-        else if (elapsedTime >= 8.1f)
+        else if (elapsedTime >= 10f)
         {
             toioFixDirection(-90);
         }
 
     }
-
     void phase11()
     {
-        if (elapsedTime >= 1f && elapsedTime < 2.5f)
+        if (elapsedTime >= 1f && elapsedTime < 6f)
         {
             toioBack();
         }
-        else if (elapsedTime >= 3f && elapsedTime < 3.7f)
+        else if (elapsedTime >= 6f && elapsedTime < 6.2f)
+        {
+            toioForward(-90);
+        }
+        else if (elapsedTime >= 7f && elapsedTime < 7.5f)
         {
             toioRight();
         }
-        else if (elapsedTime >= 4f && elapsedTime < 8f)
+        else if (elapsedTime >= 8f && elapsedTime < 14f)
         {
-            toioBack();
+            toioLeftBack();
         }
-        else if (elapsedTime >= 8f)
+        else if (elapsedTime >= 25f)
         {
-            resetTime();
+            // 最初に戻る
+            phase = 0;
+            shadow.transform.position = initialPosition;
+            shadow.transform.rotation = initialRotation;
+        }
+    }
+
+    void phaseShadow()
+    {
+        elapsedTimeShadow = Time.time - startTimeShadow;
+
+        if (elapsedTime >= 0f && elapsedTime < 5.5f)
+        {
+            shadowForward();
+        }
+        else if (elapsedTime >= 6.5f && elapsedTime < 7.3f)
+        {
+            shadowLeft();
+        }
+        else if (elapsedTime >= 7.3f && elapsedTime < 7.5f)
+        {
+            shadowFixDirection(-180);
+        }
+        else if (elapsedTime >= 8f && elapsedTime < 10f)
+        {
+            shadowForward();
+        }
+        else if (elapsedTime >= 10f && elapsedTime < 12f)
+        {
+            shadowForward();
+            //ゆっくりと光を消す
+            myLight.intensity = 1f - (elapsedTime - 10f) / 2f;
+        }
+        else if (elapsedTime >= 12f)
+        {
+            shadowForward();
         }
     }
 
@@ -494,6 +556,11 @@ public class ExtraScene : MonoBehaviour
     {
         cube.Move(-12, -12, 100);
     }
+
+    void toioLeftBack()
+    {
+        cube.Move(-8, -12, 100);
+    }
     void toioStop()
     {
         cube.Move(0, 0, 100);
@@ -525,11 +592,7 @@ public class ExtraScene : MonoBehaviour
         Debug.Log($"difEulersZValue: {difEulersZValue}, absdifEulersZValue: {absdifEulersZValue}, difEulersZValue % 360: {difEulersZValue % 360}");
         if (difEulersZValue % 360 == 0)
         {
-            Debug.Log("toioFixDirection direction is fixed");
-            // 次のphaseへ
-            Debug.Log($"phase: {phase}");
             phase = phase + 1;
-            Debug.Log($"phase is changed: {phase}");
             resetTime();
         }
         else if (difEulersZValue > 0)
@@ -562,6 +625,12 @@ public class ExtraScene : MonoBehaviour
                 cube.Move(0, -9, 30);
             }
         }
+
+        if (phaseShadow == 1)
+        {
+            startTimeShadow = Time.time;
+            phaseShadow = 2;
+        }
     }
 
     void shadowFixDirection(float direction)
@@ -577,252 +646,4 @@ public class ExtraScene : MonoBehaviour
         startTime = Time.time;
         cube.PlayPresetSound(0);
     }
-
-    // void Update()
-    // {
-    //     float currentTime = Time.time;
-    //     if (cm.synced)
-    //     {
-    //         foreach (var cube in cm.syncCubes)
-    //         {
-    //             float elapsedTime = currentTime - startTime + 86f;
-
-    //             // Phase1 左右を見渡す
-    //             if (elapsedTime >= 20f && elapsedTime < 20.5f)
-    //             {
-    //                 turnRight(cube);
-    //                 moveShadowRight();
-    //             }
-    //             else if (elapsedTime >= 21.5f && elapsedTime < 22f)
-    //             {
-    //                 turnLeft(cube);
-    //                 moveShadowLeft();
-    //             }
-    //             else if (elapsedTime >= 23f && elapsedTime < 23.5f)
-    //             {
-    //                 turnLeft(cube);
-    //                 moveShadowLeft();
-    //             }
-    //             else if (elapsedTime >= 24.5f && elapsedTime < 25f)
-    //             {
-    //                 turnRight(cube);
-    //                 moveShadowRight();
-    //             }
-    //             else if (elapsedTime >= 26f && elapsedTime < 35.2f)
-    //             {
-    //                 moveForward(cube);
-    //                 moveShadowForward(0.0306f);
-    //             }
-
-    //             //phase2 右を向き看板を確認
-    //             else if (elapsedTime >= 36f && elapsedTime < 36.5f)
-    //             {
-    //                 turnRight(cube);
-    //                 moveShadowRight();
-    //             }
-
-    //             //phase3 前を向き次の看板まで移動
-    //             else if (elapsedTime >= 40.5f && elapsedTime < 41f)
-    //             {
-    //                 turnLeft(cube);
-    //                 moveShadowLeft();
-    //             }
-
-    //             else if (elapsedTime >= 42f && elapsedTime < 46.5f)
-    //             {
-    //                 moveForward(cube);
-    //                 moveShadowForward(0.0306f);
-    //             }
-
-    //             //phase4 左を向き看板を確認
-    //             else if (elapsedTime >= 47.5f && elapsedTime < 48f)
-    //             {
-    //                 turnLeft(cube);
-    //                 moveShadowLeft();
-    //             }
-
-    //             //phase5 左右を見渡す
-    //             else if (elapsedTime >= 50f && elapsedTime < 50.5f)
-    //             {
-    //                 turnRight(cube);
-    //                 moveShadowRight();
-    //             }
-    //             else if (elapsedTime >= 51f && elapsedTime < 52f)
-    //             {
-    //                 turnLeft(cube);
-    //                 moveShadowLeft();
-    //             }
-    //             else if (elapsedTime >= 52.5f && elapsedTime < 53f)
-    //             {
-    //                 turnRight(cube);
-    //                 moveShadowRight();
-    //             }
-    //             //phase7 影のみ左右を見渡す
-    //             else if (elapsedTime >= 54f && elapsedTime < 54.5f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowRight();
-    //             }
-    //             else if (elapsedTime >= 55f && elapsedTime < 56f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowLeft();
-    //             }
-    //             else if (elapsedTime >= 56.5f && elapsedTime < 57f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowRight();
-    //             }
-    //             //phase7 影だけが動き出す
-    //             else if (elapsedTime >= 59f && elapsedTime < 60f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowRight();
-    //             }
-    //             else if (elapsedTime >= 60f && elapsedTime < 62.5f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowForward(0.0306f);
-    //             }
-    //             // phase8 toioと影が別々の方向に動き出す
-    //             else if (elapsedTime >= 62.5f && elapsedTime < 63f)
-    //             {
-    //                 turnLeft(cube);
-    //                 moveShadowForward(0.0306f);
-    //             }
-    //             else if (elapsedTime >= 63f && elapsedTime < 64f)
-    //             {
-    //                 moveForward(cube);
-    //             }
-
-    //             // phase9 影だけが右に曲がり前に動く
-    //             else if (elapsedTime >= 64f && elapsedTime < 65f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowRight();
-    //             }
-
-    //             else if (elapsedTime >= 65f && elapsedTime < 66f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowForward(0.0306f);
-    //             }
-
-    //             // phase10 影に追いつこうとする
-    //             else if (elapsedTime >= 67f && elapsedTime < 68f)
-    //             {
-    //                 turnRight(cube);
-    //                 moveShadowForward(0.0306f);
-    //             }
-    //             else if (elapsedTime >= 68.5f && elapsedTime < 69.5f)
-    //             {
-    //                 turnLeft(cube);
-    //                 moveShadowForward(0.0306f);
-    //             }
-    //             else if (elapsedTime >= 70f && elapsedTime < 71.6f)
-    //             {
-    //                 turnRight(cube);
-    //             }
-    //             else if (elapsedTime >= 72f && elapsedTime < 75f)
-    //             {
-    //                 moveForward(cube);
-    //             }
-
-    //             // phase 11 影に追いつこうとする
-    //             else if (elapsedTime >= 80f && elapsedTime < 80.5f)
-    //             {
-    //                 turnRight(cube);
-    //             }
-    //             else if (elapsedTime >= 81f && elapsedTime < 82f)
-    //             {
-    //                 turnLeft(cube);
-    //             }
-    //             else if (elapsedTime >= 82.5f && elapsedTime < 83.75f)
-    //             {
-    //                 turnRight(cube);
-    //             }
-    //             else if (elapsedTime >= 83.5f && elapsedTime < 86f)
-    //             {
-    //                 moveForward(cube);
-    //             }
-
-    //             // phase 12 影が自由に動き、toioがそれについていく
-    //             else if (elapsedTime >= 88f && elapsedTime < 89.3f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowForward(0.05f);
-    //             }
-    //             else if (elapsedTime >= 89.5f && elapsedTime < 90f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowRight();
-    //             }
-    //             else if (elapsedTime >= 90f && elapsedTime < 92.5f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowForward(0.05f);
-    //             }
-    //             else if (elapsedTime >= 92.5f && elapsedTime < 93.3f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowRight();
-    //             }
-    //             else if (elapsedTime >= 94f && elapsedTime < 99f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowForward(0.05f);
-    //             }
-    //             else if (elapsedTime >= 101f && elapsedTime < 101.7f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowLeft();
-    //             }
-    //             else if (elapsedTime >= 102f && elapsedTime < 103f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowForward(0.05f);
-    //             }
-    //             else if (elapsedTime >= 103f && elapsedTime < 103.5f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowLeft();
-    //             }
-    //             else if (elapsedTime >= 103.5f && elapsedTime < 107.5f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowForward(0.05f);
-    //             }
-    //             else if (elapsedTime >= 107.5f && elapsedTime < 108f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowLeft();
-    //             }
-    //             else if (elapsedTime >= 108f && elapsedTime < 110f)
-    //             {
-    //                 toioStop(cube);
-    //                 moveShadowForward(0.05f);
-    //             }
-
-    //         }
-    //     }
-    // }
-
-    // void moveForward(Cube cube)
-    // {
-    //     cube.Move(12, 12, 100);
-    // }
-    // void turnRight(Cube cube)
-    // {
-    //     cube.Move(8, -8, 100);
-    // }
-
-    // void turnLeft(Cube cube)
-    // {
-    //     cube.Move(-8, 8, 100);
-    // }
-
-    // void toioStop(Cube cube)
-    // {
-    //     cube.Move(0, 0, 0);
-    // }
 }
