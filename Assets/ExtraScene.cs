@@ -459,6 +459,7 @@ public class ExtraScene : MonoBehaviour
             phaseShadow = 0;
             shadow.transform.position = initialPosition;
             shadow.transform.rotation = initialRotation;
+            resetTime();
         }
     }
 
