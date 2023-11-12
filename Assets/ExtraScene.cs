@@ -108,7 +108,7 @@ public class ExtraScene : MonoBehaviour
 
         if (phaseShadow == 2)
         {
-            phaseShadow();
+            phaseShadow1();
         }
 
     }
@@ -116,10 +116,10 @@ public class ExtraScene : MonoBehaviour
     void phase0()
     {
 
-        if (elapsedTime >= 2f && elapsedTime < 9f)
+        if (elapsedTime >= 2f && elapsedTime < 5f)
         {
             // ライトをゆっくりとつける
-            myLight.intensity = elapsedTime / 6f;
+            myLight.intensity = (elapsedTime - 2f) / 3f;
         }
         else if (elapsedTime >= 10f)
         {
@@ -391,27 +391,22 @@ public class ExtraScene : MonoBehaviour
     {
         if (elapsedTime >= 1f && elapsedTime < 6.5f)
         {
-            shadowForward();
             toioForward(-90);
         }
         else if (elapsedTime >= 6.5f && elapsedTime < 7.3f)
         {
-            shadowLeft();
             toioForward(-90);
         }
         else if (elapsedTime >= 7.3f && elapsedTime < 7.5f)
         {
-            shadowFixDirection(-180);
             toioForward(-90);
         }
         else if (elapsedTime >= 7.5f && elapsedTime < 9f)
         {
-            shadowForward();
             toioForward(-90);
         }
         else if (elapsedTime >= 9f && elapsedTime < 9.8f)
         {
-            shadowForward();
             toioLeft();
         }
         else if (elapsedTime >= 9.8f)
@@ -423,17 +418,14 @@ public class ExtraScene : MonoBehaviour
     {
         if (elapsedTime >= 0f && elapsedTime < 8f)
         {
-            shadowForward();
             toioForward(-180);
         }
         else if (elapsedTime >= 8.5f && elapsedTime < 8.7f)
         {
-            shadowForward();
             toioBack();
         }
         else if (elapsedTime >= 8.5f && elapsedTime < 9.4f)
         {
-            shadowForward();
             toioRight();
         }
         else if (elapsedTime >= 10f)
@@ -464,38 +456,39 @@ public class ExtraScene : MonoBehaviour
         {
             // 最初に戻る
             phase = 0;
+            phaseShadow = 0;
             shadow.transform.position = initialPosition;
             shadow.transform.rotation = initialRotation;
         }
     }
 
-    void phaseShadow()
+    void phaseShadow1()
     {
         elapsedTimeShadow = Time.time - startTimeShadow;
 
-        if (elapsedTime >= 0f && elapsedTime < 5.5f)
+        if (elapsedTimeShadow >= 0f && elapsedTimeShadow < 5.5f)
         {
             shadowForward();
         }
-        else if (elapsedTime >= 6.5f && elapsedTime < 7.3f)
+        else if (elapsedTimeShadow >= 6.5f && elapsedTimeShadow < 7.3f)
         {
             shadowLeft();
         }
-        else if (elapsedTime >= 7.3f && elapsedTime < 7.5f)
+        else if (elapsedTimeShadow >= 7.3f && elapsedTimeShadow < 7.5f)
         {
             shadowFixDirection(-180);
         }
-        else if (elapsedTime >= 8f && elapsedTime < 10f)
+        else if (elapsedTimeShadow >= 8f && elapsedTimeShadow < 12f)
         {
             shadowForward();
         }
-        else if (elapsedTime >= 10f && elapsedTime < 12f)
+        else if (elapsedTimeShadow >= 12f && elapsedTimeShadow < 15f)
         {
             shadowForward();
             //ゆっくりと光を消す
-            myLight.intensity = 1f - (elapsedTime - 10f) / 2f;
+            myLight.intensity = 1f - (elapsedTimeShadow - 12f) / 3f;
         }
-        else if (elapsedTime >= 12f)
+        else if (elapsedTimeShadow >= 15f)
         {
             shadowForward();
         }
