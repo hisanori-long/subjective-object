@@ -74,6 +74,26 @@ public class ExtraScene : MonoBehaviour
         {
             phase6();
         }
+        else if (phase == 7)
+        {
+            phase7();
+        }
+        else if (phase == 8)
+        {
+            phase8();
+        }
+        else if (phase == 9)
+        {
+            phase9();
+        }
+        else if (phase == 10)
+        {
+            phase10();
+        }
+        else if (phase == 11)
+        {
+            phase11();
+        }
 
     }
 
@@ -93,7 +113,11 @@ public class ExtraScene : MonoBehaviour
     }
     void phase1()
     {
-
+        if (elapsedTime >= 0f && elapsedTime < 2f)
+        {
+            toioForward(0);
+            shadowForward();
+        }
         if (elapsedTime >= 2f && elapsedTime < 2.5f)
         {
             toioRight();
@@ -117,17 +141,17 @@ public class ExtraScene : MonoBehaviour
     }
     void phase2()
     {
-        if (elapsedTime >= 2f && elapsedTime < 9f)
+        if (elapsedTime >= 2f && elapsedTime < 7f)
         {
             toioForward(0);
             shadowForward();
         }
-        else if (elapsedTime >= 11.5f && elapsedTime < 12f)
+        else if (elapsedTime >= 9.5f && elapsedTime < 10f)
         {
             toioRight();
             shadowRight();
         }
-        else if (elapsedTime >= 14f && elapsedTime < 14.5f)
+        else if (elapsedTime >= 12f && elapsedTime < 12.5f)
         {
             toioLeft();
             shadowLeft();
@@ -237,11 +261,11 @@ public class ExtraScene : MonoBehaviour
         {
             toioRight();
         }
-        else if (elapsedTime >= 3.5f && elapsedTime < 4f)
+        else if (elapsedTime >= 3.5f && elapsedTime < 4.1f)
         {
             toioLeft();
         }
-        else if (elapsedTime >= 4f && elapsedTime < 5.2f)
+        else if (elapsedTime >= 4f && elapsedTime < 5f)
         {
             toioForward(-60);
         }
@@ -253,52 +277,206 @@ public class ExtraScene : MonoBehaviour
         {
             toioLeft();
         }
-        else if (elapsedTime >= 8.5f && elapsedTime < 10.2f)
+        else if (elapsedTime >= 8.5f && elapsedTime < 10.4f)
         {
             toioRight();
         }
-        else if (elapsedTime >= 14f)
+        else if (elapsedTime >= 12f)
         {
             toioFixDirection(80);
         }
     }
     void phase6()
     {
-        if (elapsedTime >= 1f && elapsedTime < 4f)
+        if (elapsedTime >= 1f && elapsedTime < 3.8f)
         {
             toioForward(80);
+        }
+        else if (elapsedTime >= 5f && elapsedTime < 5.8f)
+        {
+            toioRight();
+        }
+        else if (elapsedTime >= 6f)
+        {
+            toioFixDirection(155);
+        }
+    }
+    void phase7()
+    {
+        if (elapsedTime >= 1f && elapsedTime < 3f)
+        {
+            shadowForward();
+        }
+        if (elapsedTime >= 3f && elapsedTime < 6f)
+        {
+            shadowForward();
+            toioForward(155);
+        }
+        else if (elapsedTime >= 6f && elapsedTime < 6.3f)
+        {
+            shadowRight();
+            toioForward(155);
+        }
+        else if (elapsedTime >= 6.3f && elapsedTime < 6.5f)
+        {
+            shadowFixDirection(-180);
+            toioForward(155);
+        }
+        else if (elapsedTime >= 6.5f && elapsedTime < 7f)
+        {
+            toioForward(155);
+        }
+        else if (elapsedTime >= 7f && elapsedTime < 8f)
+        {
+            shadowForward();
+            toioForward(155);
+        }
+        else if (elapsedTime >= 8f && elapsedTime < 9f)
+        {
+            shadowForward();
+        }
+        else if (elapsedTime >= 9.5f && elapsedTime < 9.8f)
+        {
+            toioRight();
+            shadowRight();
+        }
+        else if (elapsedTime >= 9.8f && elapsedTime < 10.3f)
+        {
+            shadowRight();
+        }
+        else if (elapsedTime >= 10.5f)
+        {
+            shadowFixDirection(90);
+            toioFixDirection(180);
+        }
+    }
+    void phase8()
+    {
+        if (elapsedTime >= 1f && elapsedTime < 3f)
+        {
+            shadowForward();
+            toioForward(180);
+        }
+        else if (elapsedTime >= 3f && elapsedTime < 3.9f)
+        {
+            shadowForward();
+            toioRight();
+        }
+        else if (elapsedTime >= 3.9f)
+        {
+            toioFixDirection(-90);
+        }
+    }
+
+    void phase9()
+    {
+        if (elapsedTime >= 1f && elapsedTime < 6.5f)
+        {
+            shadowForward();
+            toioForward(-90);
+        }
+        else if (elapsedTime >= 6.5f && elapsedTime < 7.3f)
+        {
+            shadowLeft();
+            toioForward(-90);
+        }
+        else if (elapsedTime >= 7.3f && elapsedTime < 7.5f)
+        {
+            shadowFixDirection(-180);
+            toioForward(-90);
+        }
+        else if (elapsedTime >= 7.5f && elapsedTime < 9f)
+        {
+            shadowForward();
+            toioForward(-90);
+        }
+        else if (elapsedTime >= 9f && elapsedTime < 9.8f)
+        {
+            shadowForward();
+            toioLeft();
+        }
+        else if (elapsedTime >= 9.8f)
+        {
+            toioFixDirection(-180);
+        }
+    }
+    void phase10()
+    {
+        if (elapsedTime >= 0f && elapsedTime < 6f)
+        {
+            shadowForward();
+            toioForward(-180);
+        }
+        else if (elapsedTime >= 7.5f && elapsedTime < 8.1f)
+        {
+            shadowForward();
+            toioRight();
+        }
+        else if (elapsedTime >= 8.1f)
+        {
+            toioFixDirection(-90);
+        }
+
+    }
+
+    void phase11()
+    {
+        if (elapsedTime >= 1f && elapsedTime < 2.5f)
+        {
+            toioBack();
+        }
+        else if (elapsedTime >= 3f && elapsedTime < 3.7f)
+        {
+            toioRight();
+        }
+        else if (elapsedTime >= 4f && elapsedTime < 8f)
+        {
+            toioBack();
+        }
+        else if (elapsedTime >= 8f)
+        {
+            resetTime();
         }
     }
 
     void toioForward(float direction)
     {
         float difEulersZValue = eulersZValue - storedEulersZValue - direction;  // 現在のキューブの姿勢角度
-        // difEulersZValueが正の場合
+        float absdifEulersZValue = Mathf.Floor(Mathf.Abs(difEulersZValue) / 180);
 
-        if (difEulersZValue > 0 && difEulersZValue <= 180)
+        if (difEulersZValue % 360 == 0)
         {
-            // 左回転
-            cube.Move(12, 13, 100);
-        }
-        else if (difEulersZValue < -180)
-        {
-            // 左回転
-            cube.Move(12, 13, 100);
-        }
-        else if (difEulersZValue < 0 && difEulersZValue >= -180)
-        {
-            // 右回転
-            cube.Move(13, 12, 100);
-        }
-        else if (difEulersZValue > 180)
-        {
-            // 右回転
-            cube.Move(13, 12, 100);
-        }
-        else if (difEulersZValue == 0)
-        {
-            // 前進
             cube.Move(12, 12, 100);
+        }
+        else if (difEulersZValue > 0)
+        {
+            // 奇数の場合
+            if (absdifEulersZValue % 2 == 1)
+            {
+                // 右回転
+                cube.Move(13, 12, 100);
+            }
+            // 偶数の場合
+            else
+            {
+                // 左回転
+                cube.Move(12, 13, 100);
+            }
+        }
+        else if (difEulersZValue < 0)
+        {
+            // 奇数の場合
+            if (absdifEulersZValue % 2 == 1)
+            {
+                // 左回転
+                cube.Move(12, 13, 100);
+            }
+            // 偶数の場合
+            else
+            {
+                // 右回転
+                cube.Move(13, 12, 100);
+            }
         }
     }
 
@@ -310,6 +488,11 @@ public class ExtraScene : MonoBehaviour
     void toioLeft()
     {
         cube.Move(-8, 8, 100);
+    }
+
+    void toioBack()
+    {
+        cube.Move(-12, -12, 100);
     }
     void toioStop()
     {
@@ -339,12 +522,14 @@ public class ExtraScene : MonoBehaviour
     {
         float difEulersZValue = eulersZValue - storedEulersZValue - direction;  // 現在のキューブの姿勢角
         float absdifEulersZValue = Mathf.Floor(Mathf.Abs(difEulersZValue) / 180);
-        Debug.Log($"difEulersZValue: {difEulersZValue}, absdifEulersZValue: {absdifEulersZValue}");
-
+        Debug.Log($"difEulersZValue: {difEulersZValue}, absdifEulersZValue: {absdifEulersZValue}, difEulersZValue % 360: {difEulersZValue % 360}");
         if (difEulersZValue % 360 == 0)
         {
+            Debug.Log("toioFixDirection direction is fixed");
             // 次のphaseへ
+            Debug.Log($"phase: {phase}");
             phase = phase + 1;
+            Debug.Log($"phase is changed: {phase}");
             resetTime();
         }
         else if (difEulersZValue > 0)
@@ -353,13 +538,13 @@ public class ExtraScene : MonoBehaviour
             if (absdifEulersZValue % 2 == 1)
             {
                 // 右回転
-                cube.Move(0, -8, 23);
+                cube.Move(0, -9, 30);
             }
             // 偶数の場合
             else
             {
                 // 左回転
-                cube.Move(-8, 0, 23);
+                cube.Move(-9, 0, 30);
             }
         }
         else if (difEulersZValue < 0)
@@ -368,13 +553,13 @@ public class ExtraScene : MonoBehaviour
             if (absdifEulersZValue % 2 == 1)
             {
                 // 左回転
-                cube.Move(-8, 0, 23);
+                cube.Move(-9, 0, 30);
             }
             // 偶数の場合
             else
             {
                 // 右回転
-                cube.Move(0, -8, 23);
+                cube.Move(0, -9, 30);
             }
         }
     }
