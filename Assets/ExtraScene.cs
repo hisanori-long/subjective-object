@@ -21,6 +21,9 @@ public class ExtraScene : MonoBehaviour
     float storedEulersZValue = 1000; // 保存されたキューブの姿勢角度
     float elapsedTime; // 各フェーズの経過時間
     float elapsedTimeShadow; // 影の経過時間    
+    private float resetCount = 0; // リセット用のカウント
+    public float resetCountMax = 1050; // リセット用のカウントの最大値
+    public float fixDirection = -1;
     public float rotationSpeed = 180f;
     public float moveSpeed = 0.0004f;
     async void Start()
@@ -111,6 +114,13 @@ public class ExtraScene : MonoBehaviour
             phaseShadow1();
         }
 
+        resetCount += 1;
+        if (resetCount > resetCountMax)
+        {
+            storedEulersZValue += fixDirection;
+            resetCount = 0;
+            Debug.Log($"storedEulersZValue is saved: {storedEulersZValue}");
+        }
     }
 
     void phase0()
@@ -137,7 +147,7 @@ public class ExtraScene : MonoBehaviour
             toioForward(0);
             shadowForward();
         }
-        if (elapsedTime >= 2f && elapsedTime < 2.5f)
+        else if (elapsedTime >= 2f && elapsedTime < 2.5f)
         {
             toioRight();
             shadowRight();
@@ -499,6 +509,7 @@ public class ExtraScene : MonoBehaviour
     {
         float difEulersZValue = eulersZValue - storedEulersZValue - direction;  // 現在のキューブの姿勢角度
         float absdifEulersZValue = Mathf.Floor(Mathf.Abs(difEulersZValue) / 180);
+        Debug.Log($"difEulersZValue: {difEulersZValue}, absdifEulersZValue: {absdifEulersZValue}, difEulersZValue % 360: {difEulersZValue % 360}");
 
         if (difEulersZValue % 360 == 0)
         {
@@ -595,13 +606,13 @@ public class ExtraScene : MonoBehaviour
             if (absdifEulersZValue % 2 == 1)
             {
                 // 右回転
-                cube.Move(0, -9, 30);
+                cube.Move(0, -9, 20);
             }
             // 偶数の場合
             else
             {
                 // 左回転
-                cube.Move(-9, 0, 30);
+                cube.Move(-9, 0, 20);
             }
         }
         else if (difEulersZValue < 0)
@@ -610,13 +621,13 @@ public class ExtraScene : MonoBehaviour
             if (absdifEulersZValue % 2 == 1)
             {
                 // 左回転
-                cube.Move(-9, 0, 30);
+                cube.Move(-9, 0, 20);
             }
             // 偶数の場合
             else
             {
                 // 右回転
-                cube.Move(0, -9, 30);
+                cube.Move(0, -9, 20);
             }
         }
 

@@ -2922,6 +2922,8 @@ MonoBehaviour:
   shadow: {fileID: 522617343}
   myLight: {fileID: 705507994}
   connectType: 2
+  resetCountMax: 1100
+  fixDirection: -1
   rotationSpeed: 94.5
   moveSpeed: 0.67
 --- !u!114 &1553510449
