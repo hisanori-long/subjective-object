@@ -14,6 +14,9 @@ public class ExtraScene : MonoBehaviour
     private float phase = 0; // ゲームの進行度
     private float phaseShadow = 0; // 影の進行度
     public Light myLight; // 照明
+    public GameObject sign1; //看板オブジェクト
+    public GameObject sign2; //看板オブジェクト
+    public GameObject sign3; //看板オブジェクト
     public ConnectType connectType;
     CubeManager cm;
     Cube cube;
@@ -126,12 +129,12 @@ public class ExtraScene : MonoBehaviour
     void phase0()
     {
 
-        if (elapsedTime >= 2f && elapsedTime < 5f)
+        if (elapsedTime >= 5f && elapsedTime < 8f)
         {
             // ライトをゆっくりとつける
-            myLight.intensity = (elapsedTime - 2f) / 3f;
+            myLight.intensity = (elapsedTime - 5f) / 3f;
         }
-        else if (elapsedTime >= 10f)
+        else if (elapsedTime >= 5f)
         {
             // 次のphaseへ
             resetTime();
@@ -220,22 +223,38 @@ public class ExtraScene : MonoBehaviour
             toioLeft();
             shadowLeft();
         }
-        else if (elapsedTime >= 15f && elapsedTime < 15.5f)
+        else if (elapsedTime >= 15f && elapsedTime < 16f)
+        {
+            // ライトの明るさを0, 1, 0, 1, ...と0.1秒間隔で変化させる
+            if (Mathf.Floor(elapsedTime * 10) % 2 == 0)
+            {
+                myLight.intensity = 0f;
+            }
+            else
+            {
+                myLight.intensity = 1f;
+            }
+            // 看板を180度回転させる
+            sign1.transform.Rotate(new Vector3(0, 0, 180 * Time.deltaTime), Space.Self);
+            sign2.transform.Rotate(new Vector3(0, 0, 180 * Time.deltaTime), Space.Self);
+            sign3.transform.Rotate(new Vector3(0, 0, 180 * Time.deltaTime), Space.Self);
+        }
+        else if (elapsedTime >= 20f && elapsedTime < 20.5f)
         {
             toioStop();
             shadowLeft();
         }
-        else if (elapsedTime >= 16f && elapsedTime < 17f)
+        else if (elapsedTime >= 21f && elapsedTime < 22f)
         {
             toioStop();
             shadowRight();
         }
-        else if (elapsedTime >= 17.5f && elapsedTime < 18f)
+        else if (elapsedTime >= 22.5f && elapsedTime < 23f)
         {
             toioStop();
             shadowLeft();
         }
-        else if (elapsedTime >= 19f)
+        else if (elapsedTime >= 23f)
         {
             // 次のphaseへ
             toioFixDirection(0);
@@ -649,6 +668,5 @@ public class ExtraScene : MonoBehaviour
     void resetTime()
     {
         startTime = Time.time;
-        cube.PlayPresetSound(0);
     }
 }
