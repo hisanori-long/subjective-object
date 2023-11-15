@@ -190,6 +190,13 @@ public class ExtraScene : MonoBehaviour
         {
             toioForward(0);
             shadowForward();
+
+            if (soundCount == 0)
+            {
+                // サウンドを鳴らす
+                cube.PlayPresetSound(0);
+                soundCount = 1;
+            }
         }
         else if (elapsedTime >= 9.5f && elapsedTime < 10f)
         {
@@ -350,6 +357,12 @@ public class ExtraScene : MonoBehaviour
         else if (elapsedTime >= 7f && elapsedTime < 8f)
         {
             toioLeft();
+            if (soundCount == 1)
+            {
+                // サウンドを鳴らす
+                cube.PlayPresetSound(2);
+                soundCount = 2;
+            }
         }
         else if (elapsedTime >= 8.5f && elapsedTime < 10.4f)
         {
@@ -362,7 +375,7 @@ public class ExtraScene : MonoBehaviour
     }
     void phase6()
     {
-        if (elapsedTime >= 1f && elapsedTime < 3.8f)
+        if (elapsedTime >= 1f && elapsedTime < 4.5f)
         {
             toioForward(80);
         }
@@ -444,19 +457,7 @@ public class ExtraScene : MonoBehaviour
     }
     void phase9()
     {
-        if (elapsedTime >= 1f && elapsedTime < 6.5f)
-        {
-            toioForward(-90);
-        }
-        else if (elapsedTime >= 6.5f && elapsedTime < 7.3f)
-        {
-            toioForward(-90);
-        }
-        else if (elapsedTime >= 7.3f && elapsedTime < 7.5f)
-        {
-            toioForward(-90);
-        }
-        else if (elapsedTime >= 7.5f && elapsedTime < 9f)
+        if (elapsedTime >= 1f && elapsedTime < 7f)
         {
             toioForward(-90);
         }
@@ -471,19 +472,19 @@ public class ExtraScene : MonoBehaviour
     }
     void phase10()
     {
-        if (elapsedTime >= 0f && elapsedTime < 8f)
+        if (elapsedTime >= 0f && elapsedTime < 10f)
         {
             toioForward(-180);
         }
-        else if (elapsedTime >= 8.5f && elapsedTime < 9f)
+        else if (elapsedTime >= 10.5f && elapsedTime < 11.7f)
         {
             toioBack();
         }
-        else if (elapsedTime >= 9f && elapsedTime < 9.9f)
+        else if (elapsedTime >= 12f && elapsedTime < 12.9f)
         {
             toioRight();
         }
-        else if (elapsedTime >= 10f)
+        else if (elapsedTime >= 13f)
         {
             toioFixDirection(-90);
         }
@@ -495,7 +496,7 @@ public class ExtraScene : MonoBehaviour
         {
             toioBack();
         }
-        else if (elapsedTime >= 6f && elapsedTime < 6.2f)
+        else if (elapsedTime >= 6f && elapsedTime < 6.5f)
         {
             toioForward(-90);
         }
@@ -513,6 +514,7 @@ public class ExtraScene : MonoBehaviour
             phase = 0;
             phaseShadow = 0;
             changeSign = 0;
+            soundCount = 0;
             shadow.transform.position = initialPosition;
             shadow.transform.rotation = initialRotation;
             sign1.transform.rotation = initalSign1Rotation;
@@ -526,7 +528,7 @@ public class ExtraScene : MonoBehaviour
     {
         elapsedTimeShadow = Time.time - startTimeShadow;
 
-        if (elapsedTimeShadow >= 0f && elapsedTimeShadow < 5.5f)
+        if (elapsedTimeShadow >= 0f && elapsedTimeShadow < 4.5f)
         {
             shadowForward();
         }
@@ -637,6 +639,7 @@ public class ExtraScene : MonoBehaviour
         // shadowオブジェクトのTransformコンポーネントを取得し、左回転させる
         shadow.transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime, 0));
     }
+
 
 
     void toioFixDirection(float direction)
