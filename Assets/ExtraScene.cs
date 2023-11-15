@@ -29,6 +29,14 @@ public class ExtraScene : MonoBehaviour
     public float fixDirection = -1;
     public float rotationSpeed = 180f;
     public float moveSpeed = 0.0004f;
+    private float soundCount = 0; // サウンド用のカウント
+    private Quaternion initalSign1Rotation; // 看板の初期角度
+    private Quaternion initalSign2Rotation; // 看板の初期角度
+    private Quaternion initalSign3Rotation; // 看板の初期角度
+    private Vector3 initalSign1Position; // 看板の初期位置
+    private Vector3 initalSign2Position; // 看板の初期位置
+    private Vector3 initalSign3Position; // 看板の初期位置
+    private int changeSign = 0; // 看板の変更用のカウント
     async void Start()
     {
         // shadowオブジェクトのShadowScriptコンポーネントを取得
@@ -49,6 +57,11 @@ public class ExtraScene : MonoBehaviour
         // 影の位置を記録
         initialPosition = shadow.transform.position;
         initialRotation = shadow.transform.rotation;
+
+        // 看板の方向を記録
+        initalSign1Rotation = sign1.transform.rotation;
+        initalSign2Rotation = sign2.transform.rotation;
+        initalSign3Rotation = sign3.transform.rotation;
 
         resetTime(); // ゲーム開始時の時間を記録
 
@@ -223,42 +236,55 @@ public class ExtraScene : MonoBehaviour
             toioLeft();
             shadowLeft();
         }
-        else if (elapsedTime >= 15f && elapsedTime < 16f)
+        else if (elapsedTime >= 15f && elapsedTime < 23f)
         {
             // ライトの明るさを0, 1, 0, 1, ...と0.1秒間隔で変化させる
-            if (Mathf.Floor(elapsedTime * 10) % 2 == 0)
-            {
-                myLight.intensity = 0f;
-            }
-            else
-            {
-                myLight.intensity = 1f;
-            }
-            // 看板を180度回転させる
-            sign1.transform.Rotate(new Vector3(0, 0, 180 * Time.deltaTime), Space.Self);
-            sign2.transform.Rotate(new Vector3(0, 0, 180 * Time.deltaTime), Space.Self);
-            sign3.transform.Rotate(new Vector3(0, 0, 180 * Time.deltaTime), Space.Self);
+            // if (Mathf.Floor(elapsedTime * 10) % 2 == 0)
+            // {
+            //     myLight.intensity = 0f;
+            // }
+            // else
+            // {
+            //     myLight.intensity = 1f;
+            // }
+            // ライトの方向を一回転するグローバルで
+            myLight.transform.Rotate(new Vector3(0, 45 * Time.deltaTime, 0), Space.World);
+            // 看板のz軸の角度を最初の角度から180度変化した角度に移動する（グローバルスケール）
+
+
         }
-        else if (elapsedTime >= 20f && elapsedTime < 20.5f)
+        else if (elapsedTime >= 24f && elapsedTime < 24.5f)
         {
             toioStop();
             shadowLeft();
         }
-        else if (elapsedTime >= 21f && elapsedTime < 22f)
+        else if (elapsedTime >= 25f && elapsedTime < 26f)
         {
             toioStop();
             shadowRight();
         }
-        else if (elapsedTime >= 22.5f && elapsedTime < 23f)
+        else if (elapsedTime >= 26.5f && elapsedTime < 27f)
         {
             toioStop();
             shadowLeft();
         }
-        else if (elapsedTime >= 23f)
+        else if (elapsedTime >= 27f)
         {
             // 次のphaseへ
             toioFixDirection(0);
             shadowFixDirection(0);
+        }
+
+        if (elapsedTime >= 19f && changeSign == 0)
+        {
+            sign1.transform.rotation = Quaternion.Euler(sign1.transform.rotation.eulerAngles.x, sign1.transform.rotation.eulerAngles.y, initalSign1Rotation.z + 180);
+            sign2.transform.rotation = Quaternion.Euler(sign2.transform.rotation.eulerAngles.x, sign2.transform.rotation.eulerAngles.y, initalSign2Rotation.z + 180);
+            sign3.transform.rotation = Quaternion.Euler(sign3.transform.rotation.eulerAngles.x, sign3.transform.rotation.eulerAngles.y, initalSign3Rotation.z + 180);
+            // 看板の位置をローカルスケールでx軸方向に移動する
+            sign1.transform.Translate(new Vector3(0.08f, 0, 0));
+            sign2.transform.Translate(new Vector3(0.08f, 0, 0));
+            sign3.transform.Translate(new Vector3(0.08f, 0, 0));
+            changeSign = 1;
         }
 
     }
@@ -449,11 +475,11 @@ public class ExtraScene : MonoBehaviour
         {
             toioForward(-180);
         }
-        else if (elapsedTime >= 8.5f && elapsedTime < 8.7f)
+        else if (elapsedTime >= 8.5f && elapsedTime < 9f)
         {
             toioBack();
         }
-        else if (elapsedTime >= 8.5f && elapsedTime < 9.4f)
+        else if (elapsedTime >= 9f && elapsedTime < 9.9f)
         {
             toioRight();
         }
@@ -486,8 +512,12 @@ public class ExtraScene : MonoBehaviour
             // 最初に戻る
             phase = 0;
             phaseShadow = 0;
+            changeSign = 0;
             shadow.transform.position = initialPosition;
             shadow.transform.rotation = initialRotation;
+            sign1.transform.rotation = initalSign1Rotation;
+            sign2.transform.rotation = initalSign2Rotation;
+            sign3.transform.rotation = initalSign3Rotation;
             resetTime();
         }
     }
