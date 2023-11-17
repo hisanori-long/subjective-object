@@ -3122,8 +3122,8 @@ MonoBehaviour:
   sign2: {fileID: 220551024}
   sign3: {fileID: 541725444}
   connectType: 2
-  resetCountMax: 1200
-  fixDirection: -1
+  resetCountMax: 1500
+  fixDirection: 1
   rotationSpeed: 94.5
   moveSpeed: 0.67
 --- !u!114 &1553510449

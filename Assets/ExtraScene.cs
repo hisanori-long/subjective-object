@@ -63,6 +63,11 @@ public class ExtraScene : MonoBehaviour
         initalSign2Rotation = sign2.transform.rotation;
         initalSign3Rotation = sign3.transform.rotation;
 
+        // 看板の位置を記録
+        initalSign1Position = sign1.transform.position;
+        initalSign2Position = sign2.transform.position;
+        initalSign3Position = sign3.transform.position;
+
         resetTime(); // ゲーム開始時の時間を記録
 
     }
@@ -189,6 +194,7 @@ public class ExtraScene : MonoBehaviour
         if (elapsedTime >= 2f && elapsedTime < 7f)
         {
             toioForward(0);
+            // toioBack();
             shadowForward();
 
             if (soundCount == 0)
@@ -288,9 +294,9 @@ public class ExtraScene : MonoBehaviour
             sign2.transform.rotation = Quaternion.Euler(sign2.transform.rotation.eulerAngles.x, sign2.transform.rotation.eulerAngles.y, initalSign2Rotation.z + 180);
             sign3.transform.rotation = Quaternion.Euler(sign3.transform.rotation.eulerAngles.x, sign3.transform.rotation.eulerAngles.y, initalSign3Rotation.z + 180);
             // 看板の位置をローカルスケールでx軸方向に移動する
-            sign1.transform.Translate(new Vector3(0.08f, 0, 0));
-            sign2.transform.Translate(new Vector3(0.08f, 0, 0));
-            sign3.transform.Translate(new Vector3(0.08f, 0, 0));
+            sign1.transform.Translate(new Vector3(0.16f, 0, 0));
+            sign2.transform.Translate(new Vector3(0.16f, 0, 0));
+            sign3.transform.Translate(new Vector3(0.16f, 0, 0));
             changeSign = 1;
         }
 
@@ -375,7 +381,7 @@ public class ExtraScene : MonoBehaviour
     }
     void phase6()
     {
-        if (elapsedTime >= 1f && elapsedTime < 4.5f)
+        if (elapsedTime >= 1f && elapsedTime < 4f)
         {
             toioForward(80);
         }
@@ -476,15 +482,15 @@ public class ExtraScene : MonoBehaviour
         {
             toioForward(-180);
         }
-        else if (elapsedTime >= 10.5f && elapsedTime < 11.7f)
+        else if (elapsedTime >= 10.5f && elapsedTime < 11.8f)
         {
             toioBack();
         }
-        else if (elapsedTime >= 12f && elapsedTime < 12.9f)
+        else if (elapsedTime >= 12.5f && elapsedTime < 13.4f)
         {
             toioRight();
         }
-        else if (elapsedTime >= 13f)
+        else if (elapsedTime >= 13.5f)
         {
             toioFixDirection(-90);
         }
@@ -496,7 +502,7 @@ public class ExtraScene : MonoBehaviour
         {
             toioBack();
         }
-        else if (elapsedTime >= 6f && elapsedTime < 6.5f)
+        else if (elapsedTime >= 6.5f && elapsedTime < 6.8f)
         {
             toioForward(-90);
         }
@@ -504,11 +510,16 @@ public class ExtraScene : MonoBehaviour
         {
             toioRight();
         }
-        else if (elapsedTime >= 8f && elapsedTime < 14f)
+        else if (elapsedTime >= 8f && elapsedTime < 9.5f)
         {
             toioLeftBack();
         }
-        else if (elapsedTime >= 25f)
+        else if (elapsedTime >= 9.5f && elapsedTime < 13f)
+        {
+            toioBack();
+        }
+
+        else if (elapsedTime >= 15f)
         {
             // 最初に戻る
             phase = 0;
@@ -520,7 +531,10 @@ public class ExtraScene : MonoBehaviour
             sign1.transform.rotation = initalSign1Rotation;
             sign2.transform.rotation = initalSign2Rotation;
             sign3.transform.rotation = initalSign3Rotation;
-            resetTime();
+            sign1.transform.position = initalSign1Position;
+            sign2.transform.position = initalSign2Position;
+            sign3.transform.position = initalSign3Position;
+            resetTime(); initalSign1Position
         }
     }
 
@@ -528,29 +542,29 @@ public class ExtraScene : MonoBehaviour
     {
         elapsedTimeShadow = Time.time - startTimeShadow;
 
-        if (elapsedTimeShadow >= 0f && elapsedTimeShadow < 4.5f)
+        if (elapsedTimeShadow >= 0f && elapsedTimeShadow < 4f)
         {
             shadowForward();
         }
-        else if (elapsedTimeShadow >= 6.5f && elapsedTimeShadow < 7.3f)
+        else if (elapsedTimeShadow >= 4.5f && elapsedTimeShadow < 5.3f)
         {
             shadowLeft();
         }
-        else if (elapsedTimeShadow >= 7.3f && elapsedTimeShadow < 7.5f)
+        else if (elapsedTimeShadow >= 5.3f && elapsedTimeShadow < 5.5f)
         {
             shadowFixDirection(-180);
         }
-        else if (elapsedTimeShadow >= 8f && elapsedTimeShadow < 12f)
+        else if (elapsedTimeShadow >= 6f && elapsedTimeShadow < 10f)
         {
             shadowForward();
         }
-        else if (elapsedTimeShadow >= 12f && elapsedTimeShadow < 15f)
+        else if (elapsedTimeShadow >= 10f && elapsedTimeShadow < 13f)
         {
             shadowForward();
             //ゆっくりと光を消す
-            myLight.intensity = 1f - (elapsedTimeShadow - 12f) / 3f;
+            myLight.intensity = 1f - (elapsedTimeShadow - 10f) / 3f;
         }
-        else if (elapsedTimeShadow >= 15f)
+        else if (elapsedTimeShadow >= 13f)
         {
             shadowForward();
         }
@@ -610,7 +624,7 @@ public class ExtraScene : MonoBehaviour
 
     void toioBack()
     {
-        cube.Move(-12, -12, 100);
+        cube.Move(-12, -12, 200);
     }
 
     void toioLeftBack()
