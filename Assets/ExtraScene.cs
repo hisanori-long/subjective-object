@@ -154,11 +154,19 @@ public class ExtraScene : MonoBehaviour
         }
         else if (elapsedTime >= 5f)
         {
+
+            if (soundCount == 0)
+            {
+                // サウンドを鳴らす
+                cube.PlayPresetSound(0);
+                soundCount = 1;
+            }
             // 次のphaseへ
             resetTime();
             phase = 1;
             storedEulersZValue = eulersZValue;
             Debug.Log($"storedEulersZValue is saved: {storedEulersZValue}");
+
         }
     }
     void phase1()
@@ -173,10 +181,26 @@ public class ExtraScene : MonoBehaviour
             toioRight();
             shadowRight();
         }
+        else if (elapsedTime >= 2.5f && elapsedTime < 2.7f)
+        {
+            if (soundCount == 1)
+            {
+                cube.PlayPresetSound(3);
+                soundCount = 2;
+            }
+        }
         else if (elapsedTime >= 3f && elapsedTime < 4f)
         {
             toioLeft();
             shadowLeft();
+        }
+        else if (elapsedTime >= 4f && elapsedTime < 4.3f)
+        {
+            if (soundCount == 2)
+            {
+                cube.PlayPresetSound(3);
+                soundCount = 3;
+            }
         }
         else if (elapsedTime >= 4.5f && elapsedTime < 5f)
         {
@@ -197,17 +221,19 @@ public class ExtraScene : MonoBehaviour
             // toioBack();
             shadowForward();
 
-            if (soundCount == 0)
-            {
-                // サウンドを鳴らす
-                cube.PlayPresetSound(0);
-                soundCount = 1;
-            }
         }
         else if (elapsedTime >= 9.5f && elapsedTime < 10f)
         {
             toioRight();
             shadowRight();
+        }
+        else if (elapsedTime >= 11.7f && elapsedTime < 11.9f)
+        {
+            if (soundCount == 3)
+            {
+                cube.PlayPresetSound(4);
+                soundCount = 4;
+            }
         }
         else if (elapsedTime >= 12f && elapsedTime < 12.5f)
         {
@@ -234,15 +260,39 @@ public class ExtraScene : MonoBehaviour
             toioRight();
             shadowRight();
         }
+        else if (elapsedTime >= 10.8f && elapsedTime < 11f)
+        {
+            if (soundCount == 4)
+            {
+                cube.PlayPresetSound(4);
+                soundCount = 5;
+            }
+        }
         else if (elapsedTime >= 11f && elapsedTime < 11.7f)
         {
             toioLeft();
             shadowLeft();
         }
+        else if (elapsedTime >= 11.7f && elapsedTime < 12.2f)
+        {
+            if (soundCount == 5)
+            {
+                cube.PlayPresetSound(3);
+                soundCount = 6;
+            }
+        }
         else if (elapsedTime >= 12.2f && elapsedTime < 13.2f)
         {
             toioRight();
             shadowRight();
+        }
+        else if (elapsedTime >= 13.2f && elapsedTime < 13.7f)
+        {
+            if (soundCount == 6)
+            {
+                cube.PlayPresetSound(3);
+                soundCount = 7;
+            }
         }
         else if (elapsedTime >= 13.7f && elapsedTime < 14.2f)
         {
@@ -360,19 +410,37 @@ public class ExtraScene : MonoBehaviour
         {
             toioRight();
         }
+        else if (elapsedTime >= 6.5f && elapsedTime < 7f)
+        {
+            if (soundCount == 7)
+            {
+                cube.PlayPresetSound(3);
+                soundCount = 8;
+            }
+        }
         else if (elapsedTime >= 7f && elapsedTime < 8f)
         {
             toioLeft();
-            if (soundCount == 1)
+        }
+        else if (elapsedTime >= 8f && elapsedTime < 8.5f)
+        {
+            if (soundCount == 8)
             {
-                // サウンドを鳴らす
-                cube.PlayPresetSound(2);
-                soundCount = 2;
+                cube.PlayPresetSound(3);
+                soundCount = 9;
             }
         }
         else if (elapsedTime >= 8.5f && elapsedTime < 10.4f)
         {
             toioRight();
+        }
+        else if (elapsedTime >= 10.5f && elapsedTime < 11f)
+        {
+            if (soundCount == 9)
+            {
+                cube.PlayPresetSound(1);
+                soundCount = 10;
+            }
         }
         else if (elapsedTime >= 12f)
         {
@@ -385,6 +453,14 @@ public class ExtraScene : MonoBehaviour
         {
             toioForward(80);
         }
+        else if (elapsedTime >= 4.1f && elapsedTime < 4.5f)
+        {
+            if (soundCount == 10)
+            {
+                cube.PlayPresetSound(5);
+                soundCount = 11;
+            }
+        }
         else if (elapsedTime >= 5f && elapsedTime < 5.8f)
         {
             toioRight();
@@ -396,11 +472,20 @@ public class ExtraScene : MonoBehaviour
     }
     void phase7()
     {
-        if (elapsedTime >= 1f && elapsedTime < 3f)
+        if (elapsedTime >= 1f && elapsedTime < 2f)
         {
             shadowForward();
         }
-        if (elapsedTime >= 3f && elapsedTime < 6f)
+        else if (elapsedTime >= 2f && elapsedTime < 3f)
+        {
+            shadowForward();
+            if (soundCount == 11)
+            {
+                cube.PlayPresetSound(1);
+                soundCount = 12;
+            }
+        }
+        else if (elapsedTime >= 3f && elapsedTime < 6f)
         {
             shadowForward();
             toioForward(155);
@@ -534,7 +619,7 @@ public class ExtraScene : MonoBehaviour
             sign1.transform.position = initalSign1Position;
             sign2.transform.position = initalSign2Position;
             sign3.transform.position = initalSign3Position;
-            resetTime(); initalSign1Position
+            resetTime(); //initalSign1Position
         }
     }
 
